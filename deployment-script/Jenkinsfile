@@ -5,11 +5,13 @@ pipeline {
       steps {
         sh 'echo "Copy all scripts to : $FOLDER"'
         sh 'cd $WORKSPACE'
+        sh 'pwd'
         sh 'sudo cp -r ./* $FOLDER'
         sh 'ls -al'
         sh 'ls -al $WORKSPACE'
         sh 'echo "Build Docker"'
         sh 'cd $FOLDER'
+        sh 'pwd'
         sh 'sudo chown -R www-data:www-data ./*'
         sh 'ls -al'
         sh 'ls -al $WORKSPACE'
