@@ -4,19 +4,13 @@ pipeline {
     stage('Deploy') {
       steps {
         sh 'echo "Copy all scripts to : $FOLDER"'
-        sh 'cd $WORKSPACE'
         sh 'pwd'
         sh 'sudo cp -r ./* $FOLDER'
-        sh 'ls -al'
-        sh 'ls -al $WORKSPACE'
         sh 'echo "Build Docker"'
-        sh 'cd $FOLDER'
-        sh 'pwd'
-        sh 'sudo chown -R www-data:www-data ./*'
-        sh 'ls -al'
-        sh 'ls -al $WORKSPACE'
         sh '''
-sudo docker build -t $IMAGE_NAME --build-arg port=$PORT -f deployment-script/jenkins.Dockerfile .
+        cd $FOLDER
+        sudo chown -R www-data:www-data .
+        sudo docker build -t $IMAGE_NAME --build-arg port=$PORT -f deployment-script/jenkins.Dockerfile .
         '''
         sh 'echo "Remove old docker image"'
         sh 'sudo docker stop $CONTAINER_NAME ||:'
