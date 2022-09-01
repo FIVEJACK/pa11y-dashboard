@@ -1,6 +1,13 @@
 pipeline {
   agent any
   stages {
+    stage('Prebuild') {
+      steps {
+        sh 'echo "Clean up $WORKSPACE"'
+        sh 'sudo rm -r $WORKSPACE/deployment-script/ ||:'
+        sh 'sudo rm -r $WORKSPACE/config/ ||:'
+      }
+    }
     stage('Deploy') {
       steps {
         sh 'echo "Copy all scripts to : $FOLDER"'
