@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+  stages {
+    stage('Deploy') {
+      steps {
+        sh 'echo "Copy all scripts to : $FOLDER"'
+        sh 'pwd'
+        sh 'sudo cp -r ./* $FOLDER'
+        sh 'echo "Build Docker"'
+        sh '''
+        cd $FOLDER
+        sudo chown -R www-data:www-data .
+        sudo docker build -t $IMAGE_NAME --build-arg port=$PORT -f deployment-script/jenkins.Dockerfile .
+        '''
+        sh 'echo "Remove old docker image"'
+        sh 'sudo docker stop $CONTAINER_NAME ||:'
+        sh 'sudo docker rm $CONTAINER_NAME ||:'
+        sh 'echo "Run Docker image"'
+        sh 'sudo docker run -p $PORT:$PORT -e PORT=$PORT --name $CONTAINER_NAME --restart unless-stopped --network host -d $IMAGE_NAME'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'sudo docker image prune -f -a'
+    }
+  }
+  environment {
+    FOLDER = '/var/www/pa11y-dashboard'
+    CONTAINER_NAME = "pa11y_dashboard"
+    REPO_NAME = "pa11y-dashboard"
+    IMAGE_NAME = "fivejack/pa11y-dashboard"
+    PORT = 3500
+  }
+}
