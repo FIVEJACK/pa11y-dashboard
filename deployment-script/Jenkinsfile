@@ -6,8 +6,8 @@ pipeline {
         sh '''
 docker build -t $IMAGE_NAME --build-arg port=$PORT -f deployment-script/jenkins.Dockerfile .
         '''
-        sh 'docker stop $CONTAINER_NAME'
-        sh 'docker rm $CONTAINER_NAME'
+        sh 'docker stop $CONTAINER_NAME ||:'
+        sh 'docker rm $CONTAINER_NAME ||:'
         sh 'docker run -p $PORT:$PORT -e PORT=$PORT --name $CONTAINER_NAME --restart unless-stopped --network host -d $IMAGE_NAME'
       }
     }
