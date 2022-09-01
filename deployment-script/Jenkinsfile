@@ -1,21 +1,18 @@
 pipeline {
   agent any
   stages {
-    stage('Prebuild') {
-      steps {
-        sh 'echo "Clean up $WORKSPACE"'
-        sh 'sudo rm -r $WORKSPACE/deployment-script/ ||:'
-        sh 'sudo rm -r $WORKSPACE/config/ ||:'
-      }
-    }
     stage('Deploy') {
       steps {
         sh 'echo "Copy all scripts to : $FOLDER"'
         sh 'cd $WORKSPACE'
-        sh 'sudo cp -r ./ $FOLDER'
+        sh 'sudo cp -r ./* $FOLDER'
+        sh 'ls -al'
+        sh 'ls -al $WORKSPACE'
         sh 'echo "Build Docker"'
         sh 'cd $FOLDER'
-        sh 'sudo chown -R www-data:www-data *'
+        sh 'sudo chown -R www-data:www-data ./*'
+        sh 'ls -al'
+        sh 'ls -al $WORKSPACE'
         sh '''
 sudo docker build -t $IMAGE_NAME --build-arg port=$PORT -f deployment-script/jenkins.Dockerfile .
         '''
