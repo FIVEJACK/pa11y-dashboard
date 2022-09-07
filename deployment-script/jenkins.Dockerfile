@@ -19,7 +19,8 @@ RUN npm init -y &&  \
   && chown -R pptruser:pptruser /home/pptruser \
   && chown -R pptruser:pptruser /node_modules \
   && chown -R pptruser:pptruser /package.json \
-  && chown -R pptruser:pptruser /package-lock.json
+  && chown -R pptruser:pptruser /package-lock.json \
+  && sysctl -w kernel.unprivileged_userns_clone=1
 
 USER pptruser
 
