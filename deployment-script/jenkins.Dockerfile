@@ -9,9 +9,6 @@ RUN apt-get update \
     --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-RUN npm init -y &&  \
-  npm i puppeteer
-
 WORKDIR /app
 COPY . /app
 
